@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:imageeditor/features/auth/controller/auth_controller.dart';
+import 'package:imageeditor/models/user_model.dart';
 
 import '../../../core/common/custom_outline_border.dart';
 import '../../../core/utils.dart';
@@ -28,11 +30,25 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     } else if (passwordController.text.isEmpty) {
       showSnackBar(context: context, text: "Enter Password");
     } else {
-      signUp();
+      final userData = UserModel(
+        name: nameController.text,
+        email: emailController.text,
+        mobile: mobileController.text,
+        password: passwordController.text,
+        createdAt: DateTime.now(),
+        status: 0,
+        deleted: false,
+        uid: "",
+      );
+      signUp(userData: userData);
     }
   }
 
-  signUp() {}
+  signUp({required UserModel userData}) {
+    ref
+        .read(authControllerProvider.notifier)
+        .createUser(userData: userData, context: context);
+  }
 
   @override
   Widget build(BuildContext context) {

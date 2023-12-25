@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:imageeditor/core/utils.dart';
+import 'package:imageeditor/features/auth/controller/auth_controller.dart';
 
 import '../../../core/common/custom_outline_border.dart';
 import '../../../core/constants/constants.dart';
@@ -33,7 +34,12 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     }
   }
 
-  logIn() {}
+  logIn() {
+    ref.read(authControllerProvider.notifier).signInUser(
+        emailMobile: emailMobileController.text,
+        password: passwordController.text,
+        context: context);
+  }
 
   @override
   Widget build(BuildContext context) {
