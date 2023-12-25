@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imageeditor/core/utils.dart';
 import 'package:imageeditor/features/auth/repository/auth_repository.dart';
+import 'package:imageeditor/features/auth/screens/google_signup_screen.dart';
 import 'package:imageeditor/features/auth/screens/signin_screen.dart';
 import 'package:imageeditor/features/home/screens/home_screen.dart';
 
@@ -72,6 +73,45 @@ class AuthController extends Notifier<bool> {
           context,
           MaterialPageRoute(
             builder: (context) => const HomeScreen(),
+          ),
+          (route) => false);
+    });
+  }
+
+  void googleSignIn({required BuildContext context}) async {
+    state = true;
+    final res = await ref.watch(authRepositoryProvider).googleSignIn();
+    state = false;
+    res.fold((l) {
+      showSnackBar(context: context, text: l.toString());
+    }, (r) {
+      if (r['newUser'] == true) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => GoogleSignUpScreen(userData: r['userData']),
+            ),
+            (route) => false);
+      } else {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomeScreen(),
+            ),
+            (route) => false);
+      }
+    });
+  }
+
+  void logOut(BuildContext context) async {
+    state = true;
+    final res = await ref.watch(authRepositoryProvider).logOut();
+    state = false;
+    res.fold((l) => null, (r) {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const SignInScreen(),
           ),
           (route) => false);
     });

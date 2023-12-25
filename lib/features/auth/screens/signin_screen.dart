@@ -41,6 +41,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         context: context);
   }
 
+  googleSignIn() {
+    ref.read(authControllerProvider.notifier).googleSignIn(context: context);
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -153,7 +157,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                       height: height * 0.02,
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        googleSignIn();
+                      },
                       child: SvgPicture.asset(
                         Constants.googleIcon,
                       ),

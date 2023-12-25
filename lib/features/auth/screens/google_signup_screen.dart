@@ -6,14 +6,15 @@ import 'package:imageeditor/models/user_model.dart';
 import '../../../core/common/custom_outline_border.dart';
 import '../../../core/utils.dart';
 
-class SignUpScreen extends ConsumerStatefulWidget {
-  const SignUpScreen({super.key});
+class GoogleSignUpScreen extends ConsumerStatefulWidget {
+  final UserModel userData;
+  const GoogleSignUpScreen({super.key, required this.userData});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends ConsumerState<SignUpScreen> {
+class _SignUpScreenState extends ConsumerState<GoogleSignUpScreen> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final mobileController = TextEditingController();
@@ -30,15 +31,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     } else if (passwordController.text.isEmpty) {
       showSnackBar(context: context, text: "Enter Password");
     } else {
-      final userData = UserModel(
+      final userData = widget.userData.copyWith(
         name: nameController.text,
-        email: emailController.text,
+        createdAt: DateTime.now(),
         mobile: mobileController.text,
         password: passwordController.text,
-        createdAt: DateTime.now(),
-        status: 0,
-        deleted: false,
-        uid: "",
       );
       signUp(userData: userData);
     }
@@ -48,6 +45,14 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     ref
         .read(authControllerProvider.notifier)
         .createUser(userData: userData, context: context);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    nameController.text = widget.userData.name;
+    emailController.text = widget.userData.email;
+    mobileController.text = widget.userData.mobile;
   }
 
   @override
@@ -89,6 +94,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             height: height * 0.02,
           ),
           TextFormField(
+            readOnly: true,
             controller: emailController,
             decoration: InputDecoration(
               border: CustomOutlineInputBorder(
@@ -104,14 +110,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 14,
-                ),
-              ),
-              suffixIcon: IconButton(
-                onPressed: () {
-                  emailController.clear();
-                },
-                icon: const Icon(
-                  Icons.close,
                 ),
               ),
             ),

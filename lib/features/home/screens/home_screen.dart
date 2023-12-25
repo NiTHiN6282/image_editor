@@ -1,31 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:imageeditor/features/auth/screens/signin_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:imageeditor/features/auth/controller/auth_controller.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
-  logOut(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const SignInScreen(),
-        ),
-        (route) => false);
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  logOut() async {
+    ref.read(authControllerProvider.notifier).logOut(context);
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Image Editor"),
         actions: [
           IconButton(
             onPressed: () {
-              logOut(context);
+              logOut();
             },
             icon: const Icon(Icons.logout),
           ),
