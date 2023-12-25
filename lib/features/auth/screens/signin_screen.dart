@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:imageeditor/core/providers/firebase_providers.dart';
 import 'package:imageeditor/core/utils.dart';
 import 'package:imageeditor/features/auth/controller/auth_controller.dart';
 
@@ -42,7 +43,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   }
 
   googleSignIn() {
-    ref.read(authControllerProvider.notifier).googleSignIn(context: context);
+    ref.read(authControllerProvider.notifier).googleSignIn(
+          context: context,
+          googleSignIn: ref.read(googleProvider),
+        );
   }
 
   @override

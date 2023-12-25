@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:imageeditor/core/utils.dart';
 import 'package:imageeditor/features/auth/repository/auth_repository.dart';
 import 'package:imageeditor/features/auth/screens/google_signup_screen.dart';
@@ -78,9 +80,14 @@ class AuthController extends Notifier<bool> {
     });
   }
 
-  void googleSignIn({required BuildContext context}) async {
+  void googleSignIn({
+    required BuildContext context,
+    required GoogleSignIn googleSignIn,
+  }) async {
     state = true;
-    final res = await ref.watch(authRepositoryProvider).googleSignIn();
+    final res = await ref
+        .watch(authRepositoryProvider)
+        .googleSignIn(googleSignIn: googleSignIn);
     state = false;
     res.fold((l) {
       showSnackBar(context: context, text: l.toString());
@@ -103,9 +110,16 @@ class AuthController extends Notifier<bool> {
     });
   }
 
-  void logOut(BuildContext context) async {
+  void logOut({
+    required BuildContext context,
+    required GoogleSignIn googleSignIn,
+    required FirebaseAuth firebaseAuth,
+  }) async {
     state = true;
-    final res = await ref.watch(authRepositoryProvider).logOut();
+    final res = await ref.watch(authRepositoryProvider).logOut(
+          googleSignIn: googleSignIn,
+          firebaseAuth: firebaseAuth,
+        );
     state = false;
     res.fold((l) => null, (r) {
       Navigator.pushAndRemoveUntil(

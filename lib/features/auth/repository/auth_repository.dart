@@ -84,10 +84,10 @@ class AuthRepository {
     }
   }
 
-  FutureVoid googleSignIn() async {
+  FutureVoid googleSignIn({required GoogleSignIn googleSignIn}) async {
     try {
-      await GoogleSignIn().signOut();
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      await googleSignIn.signOut();
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
       // Obtain the auth details from the request
       final GoogleSignInAuthentication? googleAuth =
@@ -131,10 +131,15 @@ class AuthRepository {
     }
   }
 
-  FutureVoid logOut() async {
+  FutureVoid logOut({
+    required GoogleSignIn googleSignIn,
+    required FirebaseAuth firebaseAuth,
+  }) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.clear();
+      await googleSignIn.signOut();
+      await firebaseAuth.signOut();
       return right("");
     } catch (e) {
       return left(Failure(e.toString()));

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:imageeditor/core/providers/firebase_providers.dart';
 import 'package:imageeditor/features/auth/controller/auth_controller.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -10,8 +11,12 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  logOut() async {
-    ref.read(authControllerProvider.notifier).logOut(context);
+  logOut() {
+    ref.read(authControllerProvider.notifier).logOut(
+          context: context,
+          googleSignIn: ref.read(googleProvider),
+          firebaseAuth: ref.read(authProvider),
+        );
   }
 
   @override
