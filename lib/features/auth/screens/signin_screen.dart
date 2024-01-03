@@ -62,47 +62,15 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  children: [
-                    SizedBox(
-                      height: height * 0.25,
-                    ),
-                    TextFormField(
-                      controller: emailMobileController,
-                      decoration: InputDecoration(
-                        border: CustomOutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        contentPadding: const EdgeInsets.only(
-                          left: 16,
-                          top: 10,
-                          bottom: 10,
-                        ),
-                        label: const Text(
-                          "Email address or mobile number",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14,
-                          ),
-                        ),
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            emailMobileController.clear();
-                          },
-                          icon: const Icon(
-                            Icons.close,
-                          ),
-                        ),
+                AutofillGroup(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: height * 0.25,
                       ),
-                    ),
-                    SizedBox(
-                      height: height * 0.02,
-                    ),
-                    Consumer(builder: (context, ref, child) {
-                      var visibility = ref.watch(visibilityProvider);
-                      return TextFormField(
-                        controller: passwordController,
-                        obscureText: !visibility,
+                      TextFormField(
+                        autofillHints: const [AutofillHints.username],
+                        controller: emailMobileController,
                         decoration: InputDecoration(
                           border: CustomOutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -113,7 +81,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                             bottom: 10,
                           ),
                           label: const Text(
-                            "Password",
+                            "Email address or mobile number",
                             style: TextStyle(
                               color: Colors.grey,
                               fontSize: 14,
@@ -121,54 +89,90 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                           ),
                           suffixIcon: IconButton(
                             onPressed: () {
-                              ref
-                                  .read(visibilityProvider.notifier)
-                                  .update((state) => !state);
+                              emailMobileController.clear();
                             },
-                            icon: Icon(
-                              visibility
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
+                            icon: const Icon(
+                              Icons.close,
                             ),
                           ),
                         ),
-                      );
-                    }),
-                    SizedBox(
-                      height: height * 0.02,
-                    ),
-                    ElevatedButton(
-                      onPressed: validate,
-                      style: ElevatedButton.styleFrom(
-                          minimumSize: Size(width, 45)),
-                      child: const Text(
-                        "Log In",
                       ),
-                    ),
-                    SizedBox(
-                      height: height * 0.005,
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        "Forgotten Password?",
-                        style: TextStyle(
-                          color: Colors.black,
+                      SizedBox(
+                        height: height * 0.02,
+                      ),
+                      Consumer(builder: (context, ref, child) {
+                        var visibility = ref.watch(visibilityProvider);
+                        return TextFormField(
+                          autofillHints: const [AutofillHints.password],
+                          controller: passwordController,
+                          obscureText: !visibility,
+                          decoration: InputDecoration(
+                            border: CustomOutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            contentPadding: const EdgeInsets.only(
+                              left: 16,
+                              top: 10,
+                              bottom: 10,
+                            ),
+                            label: const Text(
+                              "Password",
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14,
+                              ),
+                            ),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                ref
+                                    .read(visibilityProvider.notifier)
+                                    .update((state) => !state);
+                              },
+                              icon: Icon(
+                                visibility
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                      SizedBox(
+                        height: height * 0.02,
+                      ),
+                      ElevatedButton(
+                        onPressed: validate,
+                        style: ElevatedButton.styleFrom(
+                            minimumSize: Size(width, 45)),
+                        child: const Text(
+                          "Log In",
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: height * 0.02,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        googleSignIn();
-                      },
-                      child: SvgPicture.asset(
-                        Constants.googleIcon,
+                      SizedBox(
+                        height: height * 0.005,
                       ),
-                    ),
-                  ],
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text(
+                          "Forgotten Password?",
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: height * 0.02,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          googleSignIn();
+                        },
+                        child: SvgPicture.asset(
+                          Constants.googleIcon,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Column(
                   children: [
